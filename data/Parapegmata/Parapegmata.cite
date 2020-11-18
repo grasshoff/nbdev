@@ -1,0 +1,276 @@
+ResearchObject:
+  Metadata:
+    Creator: Gerd Graßhoff, Florian Kotschka, Elisabeth Rinner, Jessica Sum
+    Description: Database of Ancient Parapegmata. This Collection displays, translates and categorizes data contained eight different Parapegmata. Those Parapegmata are Antiochos, Geminos, Hibeh, Madrid, Milet, Oxford, Phasies and Paris.
+    Geolocation/Region: Mediterranean
+    Keywords: parapegmata, archaeology, history of science, ancient science and technology,
+      time
+    Publication Year: '2020'
+    Rights: CC-BY-SA 3.0 DE
+    Title: Ancient Parapegmata
+    Version: '1.0'
+  Name: Ancient Parapegamta
+  Resources:
+  - Attributes:
+      authority: Name of the Authority, the meteorological event is attributed to
+      authority_ID: Identification Number of the authority, the meteorological event
+        is attributed to
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      day: Specific day an entry refers to
+      meteo_event_class: Name of the event class, the meteorological event belongs
+        to
+      meteo_event_class_ID: Identification Number of the event class, the meteorological
+        event belongs to
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      parallel: Duration of the sunshine for the location, the meteorological event
+        occurs
+      parallel_ID: Identification Number for the parallel associates with the given
+        sunshine duration
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      record_ID: Continuous Number defining the entry in the Parapegma
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+    file: Phaseis.json
+  - Attributes:
+      ID: Continuous Number defining the entry in the Parapegma
+      authority_Astro: Name of the Authority, the astronomical event is attributed
+        to
+      authority_ID_Astro: Identification Number of the Authority, the astronomical
+        event is attributed to
+      authority_ID_Meteo: Identification Number of the Authority, the meteorological
+        event is attributed to
+      authority_ID_Season: Identification Number of the Authority, the seasonal event
+        is attributed to
+      authority_Meteo: Name of the Authority, the meteorological event is attributed
+        to
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      day: Specific day an entry refers to
+      location: Name of as specified Location
+      location_ID: Identification Number of as specified Location
+      meteo_event_class: Name of the event class, the meteorological event belongs
+        to
+      meteo_event_class_ID: Identification Number of the event class, the meteorological
+        event belongs to
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+    file: Geminos.json
+  - Attributes:
+      ID: Continuous Number defining the entry in the Parapegma
+      authority_Astro: Name of the Authority, the astronomical event is attributed
+        to
+      authority_ID_Astro: Name of the Authority, the astronomical event is attributed
+        to
+      authority_ID_Meteo: Iddentification Number of the Authority, the meteorological
+        event is attributed to
+      authority_Meteo: Name of the Authority, the meteorological event is attributed
+        to
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      fragment_ID: Identification Number for a specific fragment of the parapegma
+      hole_No: Entry defining the hole, a text passage is associated with
+      hole_type: Description of the hole, a text passage is asociated with
+      hole_type_ID: Identification Number for the typy of hole, a text passage is
+        associated with
+      meteo_event_class: Name of the event class, the meteorological event belongs
+        to
+      meteo_event_class_ID: Identification Number of the event class, the meteorological
+        event belongs to
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+    file: Milet.json
+  - Attributes:
+      ID: Continuous Number defining the entry in the Parapegma
+      addition: Piece of information, that can not be categorized as meteorological,
+        astronomical or seasonal event and which describes neither a feast nor a rule
+      addition_ID: Identification Number of additional Information in the text
+      addition_greek: Original greek text passage of the addition
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      day: Specific day an entry refers to
+      feast: English Name of a Feast
+      feast_ID: Identification Number mof a Feast
+      feast_greek: Greek Name of a Feast
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      text_string: English text of a specific passage
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+      zodiac_part: Name of the Zodial Sign associated with the month the event takes
+        place in
+      zodiac_part_ID: Identification Number of the Zodial Sign associated with the
+        month the event takes place in
+    file: Antiochos.json
+  - Attributes:
+      ID: Continuous Number defining the entry in the Parapegma
+      addition_text_string: English translation of an event, that can not be categorized
+        as meteorological, astronomical or seasonal and which describes neither a
+        feast nor a rule
+      addition_text_string_greek: Greek textdescribing the addition
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      column: Column on the Papyrus
+      day: Specific day an entry refers to
+      day_length: Day length in hours, minutes and seconds
+      day_length_footnote: Further information concerning the day length
+      day_length_fractions: Day lenght as given in the parapegma, translated into
+        fractions
+      day_length_greek: Transliteration of the day length as stated in the parapegma
+      fragment: Fragment of the Papyrus, the entry is found on
+      length_month: Number of days of the month the entry is located in
+      meteo_addition_text_string: English translation of a piece of information further
+        explaining a meterological event
+      meteo_addition_text_string_greek: Greek text of a piece of information further
+        explaining a meterological event
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      meteo_statement: English translation of an entry
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      night_length: Night length in hours, minutes and seconds
+      night_length_footnote: Further information concerning the night length
+      night_length_fractions: Night lenght as given in the parapegma, translated into
+        fractions
+      night_length_greek: Transliteration of the night length as stated in the parapegma
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      text_passage: Lines on the Papyrus
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+      zodiac_part: Name of a zodiac part, the sun is positioned in
+      zodiac_part_ID: Identification Number of a zodiac part, the sun is positioned
+        in
+    file: Hibeh.json
+  - Attributes:
+      ID: Continuous Number defining the entry in the Parapegma
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      day: Specific day an entry refers to
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      supplement_ID: Identification Number of a Supplement, describing the meteorological
+        event
+      supplement_Meteo: Piece of Information further describing the meteorological
+        Event
+      text_string: English translation of an entry
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+    file: Madrid.json
+  - Attributes:
+      ID: Continuous Number defining the entry in the Parapegma
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      day: Specific day an entry refers to
+      feast: English Name of a Feast
+      feast_ID: Identification Number mof a Feast
+      feast_greek: Greek Name of a Feast
+      meteo_event_class: Name of the event class, the meteorological event belongs
+        to
+      meteo_event_class_ID: Identification Number of the event class, the meteorological
+        event belongs to
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+    file: Oxford.json
+  - Attributes:
+      Authority_ID: Identification Number of the authority, the meteorological event
+        is attributed to
+      ID: Continuous Number defining the entry in the Parapegma
+      addition: Additional information that are neither meteorological, astronomical
+        nor seasonal
+      addition_ID: Identification Numnber of additional information that are neither
+        meteorological, astronomical nor seasonal
+      addition_greek: Greek wording of the additional information
+      authority: Name of the Authority, the meteorological event is attributed to
+      celestial_object: Name of the celestial object described in the Text
+      celestial_object_ID: Identification Number of the stated celestial object
+      day: Specific day an entry refers to
+      meteo_event_class: Name of the event class, the meteorological event belongs
+        to
+      meteo_event_class_ID: Identification Number of the event class, the meteorological
+        event belongs to
+      meteo_event_type: English Name of the described meteorological Event
+      meteo_event_type_ID: Identification Number of the meteorological event described
+      meteo_event_type_greek: Greek Name of the described meteorological Event
+      month: Name of the Month, the entry is found in
+      month_ID: Identification Number of the month, an entry is found in
+      phase: English Name of the Phase, the celestial object is in
+      phase_ID: Identification Number of the stated Phase, the celestial object is
+        in
+      phase_greek: Original greek Name of the Phase, the celestial object is in
+      season: English Name of a described season
+      season_ID: Identification Number of a described season
+      season_greek: Greek Name of a described season
+      status: Piece of Information further describing the meteorological Event
+      supplement_ID: Identification Number of a Supplement/Status, describing the
+        meteorological event
+      type: Name of the celestial object type
+      type_ID: Identification Number of the celestial object type
+    file: Paris.json

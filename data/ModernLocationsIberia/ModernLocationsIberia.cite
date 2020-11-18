@@ -1,0 +1,20 @@
+ResearchObject:
+ Name: ModernLocationsIberia
+ Resources:
+    - Attributes:
+       ID: Identification number of a locality. Each single locality of the catalogue has a unique number, which is composed of 4 items; the numbers of the book, the chapter and the section of the catalogue, followed by a personal number-- "2.06.07.01", "2.06.07.02" etc.
+       ancient_toponym: Locality in Ptolemy's catalogue.
+       modern_location: Modern location of the ancient locality, suggested by @StueckelbergerGrasshoff2006.
+       longitude: Modern longitude of the locality in decimal form.
+       latitude: Modern latitude of the locality in decimal form.
+      File: ModernLocationsIberia.xlsx
+ Metadata:
+    Creator: Gerd Graßhoff, Olivier Defaux
+    Contributor: Hannah Gilb
+    Description: List of localities of Ptolemy's geographical catalogue of the Iberian peninsula with modern locations and coordinates.
+    Geolocation/Region: None
+    Keywords: ptolemy, geography, catalogue, coordinates, Iberia
+    Publication Year: '2020'
+    Title: Modern Locations and Coordinates of Ptolemy's Iberian Localities
+    Version: '1.0'
+    Rights: CC-BY-SA 3.0 DE
