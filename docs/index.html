@@ -1,13 +1,13 @@
 ---
 
-title: Project name here
+title: Check Metadata and Upload to Zenodo
 
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "Summary description here."
-description: "Summary description here."
+summary: "This notebook will check the metadata according to certain norms and if they are correct, it will upload the data to Zenodo."
+description: "This notebook will check the metadata according to certain norms and if they are correct, it will upload the data to Zenodo."
 nb_path: "index.ipynb"
 ---
 <!--
@@ -31,33 +31,596 @@ nb_path: "index.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This file will become your README and also the index of your documentation.</p>
+<h2 id="Packages">Packages<a class="anchor-link" href="#Packages"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Definitions">Definitions<a class="anchor-link" href="#Definitions"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">openfile</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">ending</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ending</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">orient</span> <span class="o">=</span> <span class="s1">&#39;table&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ending</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ending</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span> <span class="ow">or</span> <span class="n">ending</span> <span class="o">==</span> <span class="s1">&#39;cite&#39;</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span>
+
+<span class="k">def</span> <span class="nf">findkeys</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="n">ck</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">mk</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;Metadata&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">prk</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;Resources&#39;</span><span class="p">]]</span>
+    <span class="n">rk</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;Resources&#39;</span><span class="p">]][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ak</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;Attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;Resources&#39;</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">ck</span><span class="p">,</span> <span class="n">mk</span><span class="p">,</span> <span class="n">prk</span><span class="p">,</span> <span class="n">rk</span><span class="p">,</span> <span class="n">ak</span>
+
+<span class="k">def</span> <span class="nf">checkVal</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">mk</span><span class="p">,</span> <span class="n">ak</span><span class="p">):</span>
+    <span class="n">mke</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mk</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;Metadata&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Key </span><span class="si">{}</span><span class="s1"> may not be empty!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">mke</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">ake</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ak</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Key </span><span class="si">{}</span><span class="s1"> may not be empty!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+                <span class="n">mke</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">mke</span> <span class="ow">or</span> <span class="n">ake</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All metadata keys and attributes are filled, wonderful!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;bad&#39;</span>
+    <span class="k">return</span> <span class="n">mke</span><span class="p">,</span> <span class="n">ake</span><span class="p">,</span> <span class="n">message</span>
+
+<span class="k">def</span> <span class="nf">checkkeys</span><span class="p">(</span><span class="n">pk</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">ke</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pk</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;bad&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The key </span><span class="si">{}</span><span class="s1"> does not exist in your metadata, please add it!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">ke</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">ke</span><span class="p">,</span> <span class="n">message</span>
+
+<span class="k">def</span> <span class="nf">congrat</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">c1</span> <span class="ow">or</span> <span class="n">c2</span> <span class="ow">or</span> <span class="n">c3</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Congrats, all keys are set!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;bad&#39;</span>
+    <span class="k">return</span> <span class="n">message</span>
+
+<span class="k">def</span> <span class="nf">comparekeys</span><span class="p">(</span><span class="n">allfn</span><span class="p">,</span> <span class="n">cf</span><span class="p">,</span> <span class="n">caks</span><span class="p">,</span> <span class="n">dataDFkeys</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">allfn</span> <span class="o">!=</span> <span class="n">cf</span><span class="p">:</span>
+        <span class="n">missf</span> <span class="o">=</span> <span class="n">cf</span> <span class="o">-</span> <span class="n">allfn</span>
+        <span class="n">addedf</span> <span class="o">=</span> <span class="n">allfn</span> <span class="o">-</span> <span class="n">cf</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;bad&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;You did not commented the file </span><span class="si">{}</span><span class="s1"> in your cite! Please to so!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">missf</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The file </span><span class="si">{}</span><span class="s1"> is not in the directory, please remove it from the cite!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">addedf</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">missf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">addedf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">missk</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">addedk</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">allfn</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">allfn</span><span class="p">)</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">allfn</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">allfn</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">caks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">dataDFkeys</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">misski</span> <span class="o">=</span> <span class="n">dataDFkeys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">caks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">addedki</span> <span class="o">=</span> <span class="n">caks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">dataDFkeys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;bad&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;You did not commented the key </span><span class="si">{}</span><span class="s1"> in your cite! Please to so!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">misski</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The key </span><span class="si">{}</span><span class="s1"> is not your data, please remove it from the cite!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">addedki</span><span class="p">))</span>
+                <span class="n">missk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">misski</span><span class="p">)</span>
+                <span class="n">addedk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">addedki</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;bad&#39;</span>
+                
+    <span class="k">return</span> <span class="n">missf</span><span class="p">,</span> <span class="n">addedf</span><span class="p">,</span> <span class="n">missk</span><span class="p">,</span> <span class="n">addedk</span><span class="p">,</span> <span class="n">message</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">makeEmptyUpload</span><span class="p">(</span><span class="n">sandbox</span><span class="p">,</span> <span class="n">ACCESS_TOKEN</span><span class="p">):</span>
+    
+    <span class="c1"># Create empty upload first to get the bucket_url</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;access_token&#39;</span><span class="p">:</span> <span class="n">ACCESS_TOKEN</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">sandbox</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://sandbox.zenodo.org/api/deposit/depositions&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{},</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://zenodo.org/api/deposit/depositions&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{},</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+    <span class="n">bucket_url</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;links&quot;</span><span class="p">][</span><span class="s2">&quot;bucket&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">bucket_url</span><span class="p">,</span> <span class="n">params</span>
+
+<span class="k">def</span> <span class="nf">uploadOneFile</span><span class="p">(</span><span class="n">bucket_url</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+
+    <span class="c1"># Give file</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span>
+    
+    <span class="c1"># Upload file</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bucket_url</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">file</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    
+<span class="k">def</span> <span class="nf">uploadDirectory</span><span class="p">(</span><span class="n">bucket_url</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">):</span>
+
+    <span class="c1"># Find all files in directory</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dirpath</span><span class="p">)</span>
+    <span class="n">allfil</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="n">allfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allfil</span><span class="p">]</span>
+    <span class="n">allfilenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allfil</span><span class="p">]</span>
+    
+    <span class="c1"># Upload files</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">allfiles</span><span class="p">)):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bucket_url</span><span class="p">,</span> <span class="n">allfilenames</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">data</span><span class="o">=</span><span class="n">allfiles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">rs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="publprofil">publprofil<a class="anchor-link" href="#publprofil"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./publprofil.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+<span class="n">pp</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;ResearchObject&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pck</span><span class="p">,</span> <span class="n">pmk</span><span class="p">,</span> <span class="n">pprk</span><span class="p">,</span> <span class="n">prk</span><span class="p">,</span> <span class="n">pak</span> <span class="o">=</span> <span class="n">findkeys</span><span class="p">(</span><span class="n">pp</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Dataset">Dataset<a class="anchor-link" href="#Dataset"> </a></h2>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./data/Parapegmata&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">allfile</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">allfn</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allfile</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.cite&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Cite">Cite<a class="anchor-link" href="#Cite"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allfile</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;cite&#39;</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cite</span> <span class="o">=</span> <span class="n">openfile</span><span class="p">(</span><span class="n">c</span><span class="p">)[</span><span class="s1">&#39;ResearchObject&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cck</span><span class="p">,</span> <span class="n">cmk</span><span class="p">,</span> <span class="n">cprk</span><span class="p">,</span> <span class="n">crk</span><span class="p">,</span> <span class="n">cak</span> <span class="o">=</span> <span class="n">findkeys</span><span class="p">(</span><span class="n">cite</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">caks</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cak</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cf</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;File&#39;</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cite</span><span class="p">[</span><span class="s1">&#39;Resources&#39;</span><span class="p">]])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Data">Data<a class="anchor-link" href="#Data"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allfile</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.cite&#39;</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataDFkeys</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">openfile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">d</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Check-Metadata-keys-&amp;-Attributes-are-not-empty:">Check Metadata keys &amp; Attributes are not empty:<a class="anchor-link" href="#Check-Metadata-keys-&amp;-Attributes-are-not-empty:"> </a></h4>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmke</span><span class="p">,</span> <span class="n">cake</span><span class="p">,</span> <span class="n">message1</span> <span class="o">=</span> <span class="n">checkVal</span><span class="p">(</span><span class="n">cite</span><span class="p">,</span> <span class="n">pmk</span><span class="p">,</span> <span class="n">pak</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>All metadata keys and attributes are filled, wonderful!
+</pre>
+</div>
+</div>
 
 </div>
 </div>
+
 </div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Install">Install<a class="anchor-link" href="#Install"> </a></h2>
+<h4 id="Check-existence-of-all-keys:">Check existence of all keys:<a class="anchor-link" href="#Check-existence-of-all-keys:"> </a></h4>
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><code>pip install your_project_name</code></p>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">c1</span> <span class="o">=</span> <span class="n">checkkeys</span><span class="p">(</span><span class="n">pck</span><span class="p">,</span> <span class="n">cck</span><span class="p">)</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">checkkeys</span><span class="p">(</span><span class="n">pmk</span><span class="p">,</span> <span class="n">cmk</span><span class="p">)</span>
+<span class="n">c3</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cprk</span><span class="p">:</span>
+    <span class="n">c3</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">checkkeys</span><span class="p">(</span><span class="n">prk</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+<span class="n">message2</span> <span class="o">=</span> <span class="n">congrat</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+The key File does not exist in your metadata, please add it!
+</pre>
+</div>
+</div>
 
 </div>
 </div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="If-data-is-identical-to-cite:">If data is identical to cite:<a class="anchor-link" href="#If-data-is-identical-to-cite:"> </a></h4>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">missf</span><span class="p">,</span> <span class="n">addedf</span><span class="p">,</span> <span class="n">missk</span><span class="p">,</span> <span class="n">addedk</span><span class="p">,</span> <span class="n">message3</span> <span class="o">=</span> <span class="n">comparekeys</span><span class="p">(</span><span class="n">allfn</span><span class="p">,</span> <span class="n">cf</span><span class="p">,</span> <span class="n">caks</span><span class="p">,</span> <span class="n">dataDFkeys</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Oxford.json
+0
+You did not commented the key {&#39;addition_ID&#39;, &#39;addition_greek&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;zodiac_part&#39;, &#39;ID&#39;, &#39;feast_ID&#39;, &#39;text_string&#39;, &#39;zodiac_part_ID&#39;, &#39;addition&#39;} in your cite! Please to so!
+The key {&#39;meteo_event_class&#39;, &#39;parallel&#39;, &#39;authority&#39;, &#39;meteo_event_class_ID&#39;, &#39;authority_ID&#39;, &#39;parallel_ID&#39;, &#39;record_ID&#39;} is not your data, please remove it from the cite!
+Paris.json
+1
+Milet.json
+2
+You did not commented the key {&#39;month_ID&#39;, &#39;night_length_greek&#39;, &#39;meteo_statement&#39;, &#39;day&#39;, &#39;text_passage&#39;, &#39;day_length_footnote&#39;, &#39;night_length_footnote&#39;, &#39;column&#39;, &#39;addition_text_string_greek&#39;, &#39;addition_text_string&#39;, &#39;night_length&#39;, &#39;day_length&#39;, &#39;zodiac_part&#39;, &#39;fragment&#39;, &#39;night_length_fractions&#39;, &#39;season&#39;, &#39;month&#39;, &#39;day_length_greek&#39;, &#39;season_ID&#39;, &#39;season_greek&#39;, &#39;day_length_fractions&#39;, &#39;meteo_addition_text_string_greek&#39;, &#39;meteo_addition_text_string&#39;, &#39;length_month&#39;, &#39;zodiac_part_ID&#39;} in your cite! Please to so!
+The key {&#39;authority_ID_Meteo&#39;, &#39;fragment_ID&#39;, &#39;meteo_event_class&#39;, &#39;hole_type_ID&#39;, &#39;authority_Meteo&#39;, &#39;meteo_event_class_ID&#39;, &#39;hole_type&#39;, &#39;authority_Astro&#39;, &#39;authority_ID_Astro&#39;, &#39;hole_No&#39;} is not your data, please remove it from the cite!
+Phaseis.json
+3
+You did not commented the key {&#39;supplement_Meteo&#39;, &#39;supplement_ID&#39;} in your cite! Please to so!
+The key {&#39;addition_ID&#39;, &#39;addition_greek&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;zodiac_part&#39;, &#39;feast_ID&#39;, &#39;zodiac_part_ID&#39;, &#39;addition&#39;} is not your data, please remove it from the cite!
+Geminos.json
+4
+You did not commented the key {&#39;authority_ID_Meteo&#39;, &#39;fragment_ID&#39;, &#39;meteo_event_class&#39;, &#39;hole_type_ID&#39;, &#39;authority_Meteo&#39;, &#39;meteo_event_class_ID&#39;, &#39;hole_type&#39;, &#39;authority_Astro&#39;, &#39;authority_ID_Astro&#39;, &#39;hole_No&#39;} in your cite! Please to so!
+The key {&#39;month_ID&#39;, &#39;night_length_greek&#39;, &#39;meteo_statement&#39;, &#39;day&#39;, &#39;text_passage&#39;, &#39;day_length_footnote&#39;, &#39;night_length_footnote&#39;, &#39;column&#39;, &#39;addition_text_string_greek&#39;, &#39;addition_text_string&#39;, &#39;night_length&#39;, &#39;type&#39;, &#39;day_length&#39;, &#39;zodiac_part&#39;, &#39;fragment&#39;, &#39;night_length_fractions&#39;, &#39;season&#39;, &#39;month&#39;, &#39;day_length_greek&#39;, &#39;season_ID&#39;, &#39;season_greek&#39;, &#39;day_length_fractions&#39;, &#39;meteo_addition_text_string_greek&#39;, &#39;meteo_addition_text_string&#39;, &#39;length_month&#39;, &#39;zodiac_part_ID&#39;} is not your data, please remove it from the cite!
+Hibeh.json
+5
+You did not commented the key {&#39;meteo_event_class&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;meteo_event_class_ID&#39;, &#39;feast_ID&#39;} in your cite! Please to so!
+The key {&#39;text_string&#39;, &#39;supplement_Meteo&#39;, &#39;supplement_ID&#39;} is not your data, please remove it from the cite!
+Madrid.json
+6
+You did not commented the key {&#39;addition_ID&#39;, &#39;supplement_ID&#39;, &#39;addition_greek&#39;, &#39;authority&#39;, &#39;status&#39;, &#39;Authority_ID&#39;, &#39;addition&#39;} in your cite! Please to so!
+The key {&#39;feast_ID&#39;, &#39;feast_greek&#39;, &#39;feast&#39;} is not your data, please remove it from the cite!
+Antiochos.json
+7
+You did not commented the key {&#39;authority_ID&#39;, &#39;record_ID&#39;, &#39;parallel_ID&#39;, &#39;parallel&#39;} in your cite! Please to so!
+The key {&#39;addition_ID&#39;, &#39;supplement_ID&#39;, &#39;addition_greek&#39;, &#39;status&#39;, &#39;ID&#39;, &#39;Authority_ID&#39;, &#39;addition&#39;} is not your data, please remove it from the cite!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Upload-on-Zenodo">Upload on Zenodo<a class="anchor-link" href="#Upload-on-Zenodo"> </a></h2>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="How-to-use">How to use<a class="anchor-link" href="#How-to-use"> </a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Fill me in please! Don't forget code examples:</p>
+<p>If there is any error in the cite, the process is terminated; otherwise one proceed with upload.</p>
 
 </div>
 </div>
@@ -69,7 +632,119 @@ nb_path: "index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">message1</span> <span class="ow">or</span> <span class="n">message2</span> <span class="ow">or</span> <span class="n">message3</span><span class="p">):</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+An exception has occurred, use %tb to see the full traceback.
+
+<span class="ansi-red-intense-fg ansi-bold">SystemExit</span>
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>sandbox (for testing purposes) = sandbox ACCESS_TOKEN from <a href="https://sandbox.zenodo.org/account/settings/applications/tokens/new/">https://sandbox.zenodo.org/account/settings/applications/tokens/new/</a></p>
+<p>real data (for real upload) = ACCESS_TOKEN from <a href="https://zenodo.org/account/settings/applications/tokens/new/">https://zenodo.org/account/settings/applications/tokens/new/</a></p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39; </span>
+<span class="sd">    Register for a Zenodo sandbox account if you don’t already have one.</span>
+<span class="sd">    Go to https://sandbox.zenodo.org/account/settings/applications/tokens/new/.</span>
+<span class="sd">    Select the OAuth scopes you need (for the quick start tutorial you need deposit:write and deposit:actions).</span>
+<span class="sd">    Please insert your just generated token for ... below.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="n">ACCESS_TOKEN</span> <span class="o">=</span> <span class="s1">&#39;...&#39;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>ONLY CHANGE SANDBOX TO FALSE IF YOU KNOW WHAT YOU ARE DOING, THIS WILL BE A REAL UPLOAD THEN! If you want to test something always use sandbox!</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bucket_url</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">makeEmptyUpload</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ACCESS_TOKEN</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>201
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If you get a number lower than 400 everything is fine!</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">uploadDirectory</span><span class="p">(</span><span class="n">bucket_url</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">resolve</span><span class="p">()))</span>
 </pre></div>
 
     </div>
@@ -84,7 +759,114 @@ nb_path: "index.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>2</pre>
+<pre>[{&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:30.838604+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Antiochos.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Antiochos.json?versionId=6d0fb48e-5af2-4a83-a130-7bbfb81afc57&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Antiochos.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:30.832807+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:9f8b8b88c310dc7256f23ae114eecb10&#39;,
+  &#39;version_id&#39;: &#39;6d0fb48e-5af2-4a83-a130-7bbfb81afc57&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Antiochos.json&#39;,
+  &#39;size&#39;: 78439},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:31.132815+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Geminos.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Geminos.json?versionId=9120551b-d93f-415f-a116-90676f0cc84e&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Geminos.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:31.125574+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:84278864159cdef63ed7f6e4dca997a5&#39;,
+  &#39;version_id&#39;: &#39;9120551b-d93f-415f-a116-90676f0cc84e&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Geminos.json&#39;,
+  &#39;size&#39;: 303197},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:31.413782+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Hibeh.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Hibeh.json?versionId=2629e429-99d9-470d-841d-879228845908&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Hibeh.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:31.407519+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:8e0d25ec5398bf288250ed6892ba6615&#39;,
+  &#39;version_id&#39;: &#39;2629e429-99d9-470d-841d-879228845908&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Hibeh.json&#39;,
+  &#39;size&#39;: 46200},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:31.695866+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Madrid.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Madrid.json?versionId=11972ddd-230d-4943-a687-27b6ff0a777c&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Madrid.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:31.689574+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:7c700e14d8d04d0041db949db451fb9b&#39;,
+  &#39;version_id&#39;: &#39;11972ddd-230d-4943-a687-27b6ff0a777c&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Madrid.json&#39;,
+  &#39;size&#39;: 83574},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:32.197854+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Milet.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Milet.json?versionId=a4b149cd-c36e-4d86-92b1-0f15a99ef6eb&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Milet.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:32.192064+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:b1ecb72148b8a5c3e878f3d074b8ad97&#39;,
+  &#39;version_id&#39;: &#39;a4b149cd-c36e-4d86-92b1-0f15a99ef6eb&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Milet.json&#39;,
+  &#39;size&#39;: 28419},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:32.505985+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Oxford.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Oxford.json?versionId=4cdd7ed1-68c1-4d78-b3fe-106259db99ab&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Oxford.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:32.498672+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:e69ecabd1b3049fa858178cd0a4bfe67&#39;,
+  &#39;version_id&#39;: &#39;4cdd7ed1-68c1-4d78-b3fe-106259db99ab&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Oxford.json&#39;,
+  &#39;size&#39;: 33330},
+ {&#39;mimetype&#39;: &#39;application/octet-stream&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:32.773611+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Parapegmata.cite&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Parapegmata.cite?versionId=4ae782dd-45ad-40ba-858b-72a30cd8e276&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Parapegmata.cite?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:32.767986+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:ffe53c1cefcede6529615ca3ca6d7db9&#39;,
+  &#39;version_id&#39;: &#39;4ae782dd-45ad-40ba-858b-72a30cd8e276&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Parapegmata.cite&#39;,
+  &#39;size&#39;: 16270},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:33.025750+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Paris.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Paris.json?versionId=b982d907-a3b0-472c-bf9c-130965cc566d&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Paris.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:33.020506+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:6917abbae53d2669ea1e773cf272c0a4&#39;,
+  &#39;version_id&#39;: &#39;b982d907-a3b0-472c-bf9c-130965cc566d&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Paris.json&#39;,
+  &#39;size&#39;: 127034},
+ {&#39;mimetype&#39;: &#39;application/json&#39;,
+  &#39;updated&#39;: &#39;2020-10-14T14:47:33.387104+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Phaseis.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Phaseis.json?versionId=b6fc6f3b-a8ca-4235-9d7f-d6bc7fd7145e&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Phaseis.json?uploads&#39;},
+  &#39;is_head&#39;: True,
+  &#39;created&#39;: &#39;2020-10-14T14:47:33.379073+00:00&#39;,
+  &#39;checksum&#39;: &#39;md5:33deed0fdb34e2ff81a5904430c7d1b1&#39;,
+  &#39;version_id&#39;: &#39;b6fc6f3b-a8ca-4235-9d7f-d6bc7fd7145e&#39;,
+  &#39;delete_marker&#39;: False,
+  &#39;key&#39;: &#39;Phaseis.json&#39;,
+  &#39;size&#39;: 920426}]</pre>
 </div>
 
 </div>
