@@ -305,7 +305,7 @@ real data (for real upload) = ACCESS_TOKEN from https://zenodo.org/account/setti
 
 ```python
 ''' 
-    Register for a Zenodo sandbox account if you don’t already have one.
+    Register for a Zenodo sandbox account if you don't already have one.
     Go to https://sandbox.zenodo.org/account/settings/applications/tokens/new/.
     Select the OAuth scopes you need (for the quick start tutorial you need deposit:write and deposit:actions).
     Please insert your just generated token for ... below.
