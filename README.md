@@ -10,13 +10,14 @@ from pathlib import Path
 import pandas as pd
 import sys
 import requests
+from IPython.display import display, Markdown
 ```
 
 ## Definitions
 
 ```python
 def openfile(f):
-    ending = str(f).split('.')[-1]
+    ending = f.suffix.replace('.', '')
     path = str(f)
     if ending == 'json':
         try:
@@ -27,10 +28,17 @@ def openfile(f):
         try:
             d = pd.read_csv(path, delimiter = ',')
         except:
-            d = pd.read_csv(path, delimiter = '\t')
+            try:
+                d = pd.read_csv(path, delimiter = '\t')
+            except:
+                d = pd.read_csv(path, delimiter = ';')
     if ending == 'yaml' or ending == 'cite':
         with open(path) as yml:
             d = yaml.load(yml, Loader=yaml.FullLoader)
+    if ending == 'md':
+        with open(path, encoding="utf8") as file:
+            d = file.read()
+            display(Markdown(d))
     return d
 
 def findkeys(c):
@@ -84,9 +92,12 @@ def comparekeys(allfn, cf, caks, dataDFkeys):
     if allfn != cf:
         missf = cf - allfn
         addedf = allfn - cf
-        message = 'bad'
-        print('You did not commented the file {} in your cite! Please to so!'.format(missf))
-        print('The file {} is not in the directory, please remove it from the cite!'.format(addedf))
+        missk = []
+        addedk = []
+        messages = []
+        print('You did not commented the file {} in your cite! Please to so!'.format(addedf))
+        print('The file {} is not in the directory, please remove it from the cite!'.format(missf))
+        messages.append('bad')
     else:
         missf = None
         addedf = None
@@ -105,10 +116,11 @@ def comparekeys(allfn, cf, caks, dataDFkeys):
                 print('The key {} is not your data, please remove it from the cite!'.format(addedki))
                 missk.append(misski)
                 addedk.append(addedki)
-        if len(messages) == 0:
-            message = None
-        else:
-            message = 'bad'
+        print(missk)
+    if len(messages) == 0:
+        message = None
+    else:
+        message = 'bad'
                 
     return missf, addedf, missk, addedk, message
 ```
@@ -171,7 +183,7 @@ pck, pmk, pprk, prk, pak = findkeys(pp)
 ## Dataset
 
 ```python
-p = Path('./data/Parapegmata')
+p = Path('./data/ModernLocationsIberia')
 ```
 
 ```python
@@ -179,13 +191,13 @@ allfile = list(p.glob('*'))
 ```
 
 ```python
-allfn = set([i.name for i in allfile if not i.suffix == '.cite'])
+allfn = set([i.name for i in allfile if not i.suffix == '.cite' and not i.suffix == '.md'])
 ```
 
 ### Cite
 
 ```python
-c = list(sorted([i for i in allfile if str(i).split('.')[-1] == 'cite']))[0]
+c = list(sorted([i for i in allfile if i.suffix == '.cite']))[0]
 ```
 
 ```python
@@ -201,7 +213,10 @@ caks = [set(i) for i in cak]
 ```
 
 ```python
-cf = set([i['File'.lower()] for i in cite['Resources']])
+try:
+    cf = set([i['File'.lower()] for i in cite['Resources']])
+except:
+    cf = set([i['File'] for i in cite['Resources']])
 ```
 
 ### Data
@@ -211,7 +226,7 @@ d = list(sorted([i for i in allfile if not i.suffix == '.cite']))
 ```
 
 ```python
-dataDFkeys = [set(openfile(f).keys()) for f in d]
+dataDFkeys = [set(openfile(f).keys()) for f in d if f.suffix == '.json' or f.suffix == '.csv']
 ```
 
 #### Check Metadata keys & Attributes are not empty:
@@ -234,52 +249,14 @@ for i in cprk:
 message2 = congrat(c1, c2, c3)
 ```
 
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    The key File does not exist in your metadata, please add it!
-    
-
 #### If data is identical to cite:
 
 ```python
 missf, addedf, missk, addedk, message3 = comparekeys(allfn, cf, caks, dataDFkeys)
 ```
 
-    Milet.json
-    0
-    You did not commented the key {'addition_ID', 'zodiac_part_ID', 'feast_ID', 'feast', 'ID', 'text_string', 'feast_greek', 'addition', 'addition_greek', 'zodiac_part'} in your cite! Please to so!
-    The key {'parallel', 'meteo_event_class_ID', 'parallel_ID', 'authority', 'meteo_event_class', 'record_ID', 'authority_ID'} is not your data, please remove it from the cite!
-    Madrid.json
-    1
-    Paris.json
-    2
-    You did not commented the key {'day_length_fractions', 'month', 'length_month', 'meteo_addition_text_string', 'night_length_fractions', 'zodiac_part', 'meteo_statement', 'day_length', 'night_length_greek', 'day', 'column', 'addition_text_string_greek', 'season', 'zodiac_part_ID', 'season_greek', 'day_length_greek', 'fragment', 'night_length_footnote', 'addition_text_string', 'text_passage', 'night_length', 'day_length_footnote', 'month_ID', 'meteo_addition_text_string_greek', 'season_ID'} in your cite! Please to so!
-    The key {'authority_ID_Meteo', 'meteo_event_class_ID', 'authority_Meteo', 'hole_type_ID', 'hole_No', 'meteo_event_class', 'fragment_ID', 'hole_type', 'authority_ID_Astro', 'authority_Astro'} is not your data, please remove it from the cite!
-    Geminos.json
-    3
-    You did not commented the key {'supplement_Meteo', 'supplement_ID'} in your cite! Please to so!
-    The key {'addition_ID', 'zodiac_part_ID', 'feast_ID', 'feast', 'feast_greek', 'addition', 'addition_greek', 'zodiac_part'} is not your data, please remove it from the cite!
-    Oxford.json
-    4
-    You did not commented the key {'authority_ID_Meteo', 'meteo_event_class_ID', 'authority_Meteo', 'hole_type_ID', 'hole_No', 'meteo_event_class', 'fragment_ID', 'hole_type', 'authority_ID_Astro', 'authority_Astro'} in your cite! Please to so!
-    The key {'day_length_fractions', 'month', 'length_month', 'meteo_addition_text_string', 'night_length_fractions', 'zodiac_part', 'meteo_statement', 'day_length', 'night_length_greek', 'day', 'column', 'addition_text_string_greek', 'season', 'zodiac_part_ID', 'season_greek', 'day_length_greek', 'fragment', 'type', 'night_length_footnote', 'addition_text_string', 'night_length', 'text_passage', 'day_length_footnote', 'month_ID', 'meteo_addition_text_string_greek', 'season_ID'} is not your data, please remove it from the cite!
-    Hibeh.json
-    5
-    You did not commented the key {'feast_ID', 'feast', 'meteo_event_class_ID', 'meteo_event_class', 'feast_greek'} in your cite! Please to so!
-    The key {'text_string', 'supplement_Meteo', 'supplement_ID'} is not your data, please remove it from the cite!
-    Antiochos.json
-    6
-    You did not commented the key {'addition_ID', 'status', 'supplement_ID', 'Authority_ID', 'authority', 'addition', 'addition_greek'} in your cite! Please to so!
-    The key {'feast_ID', 'feast', 'feast_greek'} is not your data, please remove it from the cite!
-    Phaseis.json
-    7
-    You did not commented the key {'parallel_ID', 'parallel', 'authority_ID', 'record_ID'} in your cite! Please to so!
-    The key {'addition_ID', 'status', 'ID', 'supplement_ID', 'Authority_ID', 'addition', 'addition_greek'} is not your data, please remove it from the cite!
+    You did not commented the file {'ModernLocationsIberia.csv'} in your cite! Please to so!
+    The file {'ModernLocationsIberia.xlsx'} is not in the directory, please remove it from the cite!
     
 
 ## Upload on Zenodo
@@ -298,10 +275,6 @@ if (message1 or message2 or message3):
     SystemExit
     
 
-
-    C:\Users\Public\Anaconda\lib\site-packages\IPython\core\interactiveshell.py:3334: UserWarning: To exit: use 'exit', 'quit', or Ctrl-D.
-      warn("To exit: use 'exit', 'quit', or Ctrl-D.", stacklevel=1)
-    
 
 sandbox (for testing purposes) = sandbox ACCESS_TOKEN from https://sandbox.zenodo.org/account/settings/applications/tokens/new/
 
@@ -336,113 +309,41 @@ uploadDirectory(bucket_url, params, str(p.resolve()))
 
 
 
-    [{'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:10.461734+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Antiochos.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Antiochos.json?versionId=fb16f68e-5b7a-4a53-912e-f4480ecb44d1',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Antiochos.json?uploads'},
+    [{'mimetype': 'application/octet-stream',
+      'updated': '2020-12-16T15:43:26.187743+00:00',
+      'links': {'self': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsDocu.md',
+       'version': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsDocu.md?versionId=ca0bbff7-07de-498a-b61d-05ba15193f4f',
+       'uploads': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsDocu.md?uploads'},
       'is_head': True,
-      'created': '2020-12-16T10:46:10.455055+00:00',
-      'checksum': 'md5:9f8b8b88c310dc7256f23ae114eecb10',
-      'version_id': 'fb16f68e-5b7a-4a53-912e-f4480ecb44d1',
+      'created': '2020-12-16T15:43:26.182095+00:00',
+      'checksum': 'md5:a5351624ad3e1a780108ed6d88b510fe',
+      'version_id': 'ca0bbff7-07de-498a-b61d-05ba15193f4f',
       'delete_marker': False,
-      'key': 'Antiochos.json',
-      'size': 78439},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:10.998593+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Geminos.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Geminos.json?versionId=5e82321a-aa1b-4ecb-b1a9-eaa7d1fc26ee',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Geminos.json?uploads'},
-      'is_head': True,
-      'created': '2020-12-16T10:46:10.993280+00:00',
-      'checksum': 'md5:84278864159cdef63ed7f6e4dca997a5',
-      'version_id': '5e82321a-aa1b-4ecb-b1a9-eaa7d1fc26ee',
-      'delete_marker': False,
-      'key': 'Geminos.json',
-      'size': 303197},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:11.297076+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Hibeh.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Hibeh.json?versionId=0169900c-86ef-4d53-a9ec-77764f10ce39',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Hibeh.json?uploads'},
-      'is_head': True,
-      'created': '2020-12-16T10:46:11.291805+00:00',
-      'checksum': 'md5:8e0d25ec5398bf288250ed6892ba6615',
-      'version_id': '0169900c-86ef-4d53-a9ec-77764f10ce39',
-      'delete_marker': False,
-      'key': 'Hibeh.json',
-      'size': 46200},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:11.642247+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Madrid.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Madrid.json?versionId=5524dfd6-1ad1-479a-99aa-4dc5a923bc3b',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Madrid.json?uploads'},
-      'is_head': True,
-      'created': '2020-12-16T10:46:11.634381+00:00',
-      'checksum': 'md5:7c700e14d8d04d0041db949db451fb9b',
-      'version_id': '5524dfd6-1ad1-479a-99aa-4dc5a923bc3b',
-      'delete_marker': False,
-      'key': 'Madrid.json',
-      'size': 83574},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:12.116721+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Milet.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Milet.json?versionId=82f9cc11-ebee-42bf-94a5-afa42d74f5c3',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Milet.json?uploads'},
-      'is_head': True,
-      'created': '2020-12-16T10:46:12.111106+00:00',
-      'checksum': 'md5:b1ecb72148b8a5c3e878f3d074b8ad97',
-      'version_id': '82f9cc11-ebee-42bf-94a5-afa42d74f5c3',
-      'delete_marker': False,
-      'key': 'Milet.json',
-      'size': 28419},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:12.404082+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Oxford.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Oxford.json?versionId=669dd8e1-4a27-463a-9139-debd9e4119c7',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Oxford.json?uploads'},
-      'is_head': True,
-      'created': '2020-12-16T10:46:12.399069+00:00',
-      'checksum': 'md5:e69ecabd1b3049fa858178cd0a4bfe67',
-      'version_id': '669dd8e1-4a27-463a-9139-debd9e4119c7',
-      'delete_marker': False,
-      'key': 'Oxford.json',
-      'size': 33330},
+      'key': 'ModernLocationsDocu.md',
+      'size': 734},
      {'mimetype': 'application/octet-stream',
-      'updated': '2020-12-16T10:46:12.656568+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Parapegmata.cite',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Parapegmata.cite?versionId=cbe6751a-22fd-4692-824f-885ebe4a0f0d',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Parapegmata.cite?uploads'},
+      'updated': '2020-12-16T15:43:26.700750+00:00',
+      'links': {'self': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsIberia.cite',
+       'version': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsIberia.cite?versionId=d2aed9ae-98a6-487d-afe5-3a6fcfa603d7',
+       'uploads': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsIberia.cite?uploads'},
       'is_head': True,
-      'created': '2020-12-16T10:46:12.651910+00:00',
-      'checksum': 'md5:ffe53c1cefcede6529615ca3ca6d7db9',
-      'version_id': 'cbe6751a-22fd-4692-824f-885ebe4a0f0d',
+      'created': '2020-12-16T15:43:26.696147+00:00',
+      'checksum': 'md5:d0fb478e1e5bb6d886217dd16396eef3',
+      'version_id': 'd2aed9ae-98a6-487d-afe5-3a6fcfa603d7',
       'delete_marker': False,
-      'key': 'Parapegmata.cite',
-      'size': 16270},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:12.966468+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Paris.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Paris.json?versionId=c27c8048-fa80-4674-a774-67812622a67d',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Paris.json?uploads'},
+      'key': 'ModernLocationsIberia.cite',
+      'size': 1171},
+     {'mimetype': 'text/csv',
+      'updated': '2020-12-16T15:43:27.272359+00:00',
+      'links': {'self': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsIberia.csv',
+       'version': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsIberia.csv?versionId=ccaa70b9-c22a-4f01-bdae-a848011e94aa',
+       'uploads': 'https://sandbox.zenodo.org/api/files/a4eef343-e449-400c-84e2-f1c8e9b29c39/ModernLocationsIberia.csv?uploads'},
       'is_head': True,
-      'created': '2020-12-16T10:46:12.960431+00:00',
-      'checksum': 'md5:6917abbae53d2669ea1e773cf272c0a4',
-      'version_id': 'c27c8048-fa80-4674-a774-67812622a67d',
+      'created': '2020-12-16T15:43:27.267774+00:00',
+      'checksum': 'md5:cfc425f53644b6e9a587e32986c3bf57',
+      'version_id': 'ccaa70b9-c22a-4f01-bdae-a848011e94aa',
       'delete_marker': False,
-      'key': 'Paris.json',
-      'size': 127034},
-     {'mimetype': 'application/json',
-      'updated': '2020-12-16T10:46:13.290260+00:00',
-      'links': {'self': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Phaseis.json',
-       'version': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Phaseis.json?versionId=45727d9b-dfe8-4e2d-9220-f6571d45a4ad',
-       'uploads': 'https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Phaseis.json?uploads'},
-      'is_head': True,
-      'created': '2020-12-16T10:46:13.284010+00:00',
-      'checksum': 'md5:33deed0fdb34e2ff81a5904430c7d1b1',
-      'version_id': '45727d9b-dfe8-4e2d-9220-f6571d45a4ad',
-      'delete_marker': False,
-      'key': 'Phaseis.json',
-      'size': 920426}]
+      'key': 'ModernLocationsIberia.csv',
+      'size': 22730}]
 
 
