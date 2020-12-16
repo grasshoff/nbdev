@@ -243,7 +243,7 @@ nb_path: "index.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./publprofil.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./data/publprofil.yaml&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
     <span class="n">pp</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
 <span class="n">pp</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="s1">&#39;ResearchObject&#39;</span><span class="p">]</span>
 </pre></div>
@@ -572,36 +572,36 @@ The key File does not exist in your metadata, please add it!
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Oxford.json
+<pre>Milet.json
 0
-You did not commented the key {&#39;addition_ID&#39;, &#39;addition_greek&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;zodiac_part&#39;, &#39;ID&#39;, &#39;feast_ID&#39;, &#39;text_string&#39;, &#39;zodiac_part_ID&#39;, &#39;addition&#39;} in your cite! Please to so!
-The key {&#39;meteo_event_class&#39;, &#39;parallel&#39;, &#39;authority&#39;, &#39;meteo_event_class_ID&#39;, &#39;authority_ID&#39;, &#39;parallel_ID&#39;, &#39;record_ID&#39;} is not your data, please remove it from the cite!
-Paris.json
+You did not commented the key {&#39;addition_ID&#39;, &#39;zodiac_part_ID&#39;, &#39;feast_ID&#39;, &#39;feast&#39;, &#39;ID&#39;, &#39;text_string&#39;, &#39;feast_greek&#39;, &#39;addition&#39;, &#39;addition_greek&#39;, &#39;zodiac_part&#39;} in your cite! Please to so!
+The key {&#39;parallel&#39;, &#39;meteo_event_class_ID&#39;, &#39;parallel_ID&#39;, &#39;authority&#39;, &#39;meteo_event_class&#39;, &#39;record_ID&#39;, &#39;authority_ID&#39;} is not your data, please remove it from the cite!
+Madrid.json
 1
-Milet.json
+Paris.json
 2
-You did not commented the key {&#39;month_ID&#39;, &#39;night_length_greek&#39;, &#39;meteo_statement&#39;, &#39;day&#39;, &#39;text_passage&#39;, &#39;day_length_footnote&#39;, &#39;night_length_footnote&#39;, &#39;column&#39;, &#39;addition_text_string_greek&#39;, &#39;addition_text_string&#39;, &#39;night_length&#39;, &#39;day_length&#39;, &#39;zodiac_part&#39;, &#39;fragment&#39;, &#39;night_length_fractions&#39;, &#39;season&#39;, &#39;month&#39;, &#39;day_length_greek&#39;, &#39;season_ID&#39;, &#39;season_greek&#39;, &#39;day_length_fractions&#39;, &#39;meteo_addition_text_string_greek&#39;, &#39;meteo_addition_text_string&#39;, &#39;length_month&#39;, &#39;zodiac_part_ID&#39;} in your cite! Please to so!
-The key {&#39;authority_ID_Meteo&#39;, &#39;fragment_ID&#39;, &#39;meteo_event_class&#39;, &#39;hole_type_ID&#39;, &#39;authority_Meteo&#39;, &#39;meteo_event_class_ID&#39;, &#39;hole_type&#39;, &#39;authority_Astro&#39;, &#39;authority_ID_Astro&#39;, &#39;hole_No&#39;} is not your data, please remove it from the cite!
-Phaseis.json
+You did not commented the key {&#39;day_length_fractions&#39;, &#39;month&#39;, &#39;length_month&#39;, &#39;meteo_addition_text_string&#39;, &#39;night_length_fractions&#39;, &#39;zodiac_part&#39;, &#39;meteo_statement&#39;, &#39;day_length&#39;, &#39;night_length_greek&#39;, &#39;day&#39;, &#39;column&#39;, &#39;addition_text_string_greek&#39;, &#39;season&#39;, &#39;zodiac_part_ID&#39;, &#39;season_greek&#39;, &#39;day_length_greek&#39;, &#39;fragment&#39;, &#39;night_length_footnote&#39;, &#39;addition_text_string&#39;, &#39;text_passage&#39;, &#39;night_length&#39;, &#39;day_length_footnote&#39;, &#39;month_ID&#39;, &#39;meteo_addition_text_string_greek&#39;, &#39;season_ID&#39;} in your cite! Please to so!
+The key {&#39;authority_ID_Meteo&#39;, &#39;meteo_event_class_ID&#39;, &#39;authority_Meteo&#39;, &#39;hole_type_ID&#39;, &#39;hole_No&#39;, &#39;meteo_event_class&#39;, &#39;fragment_ID&#39;, &#39;hole_type&#39;, &#39;authority_ID_Astro&#39;, &#39;authority_Astro&#39;} is not your data, please remove it from the cite!
+Geminos.json
 3
 You did not commented the key {&#39;supplement_Meteo&#39;, &#39;supplement_ID&#39;} in your cite! Please to so!
-The key {&#39;addition_ID&#39;, &#39;addition_greek&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;zodiac_part&#39;, &#39;feast_ID&#39;, &#39;zodiac_part_ID&#39;, &#39;addition&#39;} is not your data, please remove it from the cite!
-Geminos.json
+The key {&#39;addition_ID&#39;, &#39;zodiac_part_ID&#39;, &#39;feast_ID&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;addition&#39;, &#39;addition_greek&#39;, &#39;zodiac_part&#39;} is not your data, please remove it from the cite!
+Oxford.json
 4
-You did not commented the key {&#39;authority_ID_Meteo&#39;, &#39;fragment_ID&#39;, &#39;meteo_event_class&#39;, &#39;hole_type_ID&#39;, &#39;authority_Meteo&#39;, &#39;meteo_event_class_ID&#39;, &#39;hole_type&#39;, &#39;authority_Astro&#39;, &#39;authority_ID_Astro&#39;, &#39;hole_No&#39;} in your cite! Please to so!
-The key {&#39;month_ID&#39;, &#39;night_length_greek&#39;, &#39;meteo_statement&#39;, &#39;day&#39;, &#39;text_passage&#39;, &#39;day_length_footnote&#39;, &#39;night_length_footnote&#39;, &#39;column&#39;, &#39;addition_text_string_greek&#39;, &#39;addition_text_string&#39;, &#39;night_length&#39;, &#39;type&#39;, &#39;day_length&#39;, &#39;zodiac_part&#39;, &#39;fragment&#39;, &#39;night_length_fractions&#39;, &#39;season&#39;, &#39;month&#39;, &#39;day_length_greek&#39;, &#39;season_ID&#39;, &#39;season_greek&#39;, &#39;day_length_fractions&#39;, &#39;meteo_addition_text_string_greek&#39;, &#39;meteo_addition_text_string&#39;, &#39;length_month&#39;, &#39;zodiac_part_ID&#39;} is not your data, please remove it from the cite!
+You did not commented the key {&#39;authority_ID_Meteo&#39;, &#39;meteo_event_class_ID&#39;, &#39;authority_Meteo&#39;, &#39;hole_type_ID&#39;, &#39;hole_No&#39;, &#39;meteo_event_class&#39;, &#39;fragment_ID&#39;, &#39;hole_type&#39;, &#39;authority_ID_Astro&#39;, &#39;authority_Astro&#39;} in your cite! Please to so!
+The key {&#39;day_length_fractions&#39;, &#39;month&#39;, &#39;length_month&#39;, &#39;meteo_addition_text_string&#39;, &#39;night_length_fractions&#39;, &#39;zodiac_part&#39;, &#39;meteo_statement&#39;, &#39;day_length&#39;, &#39;night_length_greek&#39;, &#39;day&#39;, &#39;column&#39;, &#39;addition_text_string_greek&#39;, &#39;season&#39;, &#39;zodiac_part_ID&#39;, &#39;season_greek&#39;, &#39;day_length_greek&#39;, &#39;fragment&#39;, &#39;type&#39;, &#39;night_length_footnote&#39;, &#39;addition_text_string&#39;, &#39;night_length&#39;, &#39;text_passage&#39;, &#39;day_length_footnote&#39;, &#39;month_ID&#39;, &#39;meteo_addition_text_string_greek&#39;, &#39;season_ID&#39;} is not your data, please remove it from the cite!
 Hibeh.json
 5
-You did not commented the key {&#39;meteo_event_class&#39;, &#39;feast&#39;, &#39;feast_greek&#39;, &#39;meteo_event_class_ID&#39;, &#39;feast_ID&#39;} in your cite! Please to so!
+You did not commented the key {&#39;feast_ID&#39;, &#39;feast&#39;, &#39;meteo_event_class_ID&#39;, &#39;meteo_event_class&#39;, &#39;feast_greek&#39;} in your cite! Please to so!
 The key {&#39;text_string&#39;, &#39;supplement_Meteo&#39;, &#39;supplement_ID&#39;} is not your data, please remove it from the cite!
-Madrid.json
-6
-You did not commented the key {&#39;addition_ID&#39;, &#39;supplement_ID&#39;, &#39;addition_greek&#39;, &#39;authority&#39;, &#39;status&#39;, &#39;Authority_ID&#39;, &#39;addition&#39;} in your cite! Please to so!
-The key {&#39;feast_ID&#39;, &#39;feast_greek&#39;, &#39;feast&#39;} is not your data, please remove it from the cite!
 Antiochos.json
+6
+You did not commented the key {&#39;addition_ID&#39;, &#39;status&#39;, &#39;supplement_ID&#39;, &#39;Authority_ID&#39;, &#39;authority&#39;, &#39;addition&#39;, &#39;addition_greek&#39;} in your cite! Please to so!
+The key {&#39;feast_ID&#39;, &#39;feast&#39;, &#39;feast_greek&#39;} is not your data, please remove it from the cite!
+Phaseis.json
 7
-You did not commented the key {&#39;authority_ID&#39;, &#39;record_ID&#39;, &#39;parallel_ID&#39;, &#39;parallel&#39;} in your cite! Please to so!
-The key {&#39;addition_ID&#39;, &#39;supplement_ID&#39;, &#39;addition_greek&#39;, &#39;status&#39;, &#39;ID&#39;, &#39;Authority_ID&#39;, &#39;addition&#39;} is not your data, please remove it from the cite!
+You did not commented the key {&#39;parallel_ID&#39;, &#39;parallel&#39;, &#39;authority_ID&#39;, &#39;record_ID&#39;} in your cite! Please to so!
+The key {&#39;addition_ID&#39;, &#39;status&#39;, &#39;ID&#39;, &#39;supplement_ID&#39;, &#39;Authority_ID&#39;, &#39;addition&#39;, &#39;addition_greek&#39;} is not your data, please remove it from the cite!
 </pre>
 </div>
 </div>
@@ -650,6 +650,15 @@ The key {&#39;addition_ID&#39;, &#39;supplement_ID&#39;, &#39;addition_greek&#39
 An exception has occurred, use %tb to see the full traceback.
 
 <span class="ansi-red-intense-fg ansi-bold">SystemExit</span>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>C:\Users\Public\Anaconda\lib\site-packages\IPython\core\interactiveshell.py:3334: UserWarning: To exit: use &#39;exit&#39;, &#39;quit&#39;, or Ctrl-D.
+  warn(&#34;To exit: use &#39;exit&#39;, &#39;quit&#39;, or Ctrl-D.&#34;, stacklevel=1)
 </pre>
 </div>
 </div>
@@ -760,110 +769,110 @@ An exception has occurred, use %tb to see the full traceback.
 
 <div class="output_text output_subarea output_execute_result">
 <pre>[{&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:30.838604+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Antiochos.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Antiochos.json?versionId=6d0fb48e-5af2-4a83-a130-7bbfb81afc57&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Antiochos.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:10.461734+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Antiochos.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Antiochos.json?versionId=fb16f68e-5b7a-4a53-912e-f4480ecb44d1&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Antiochos.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:30.832807+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:10.455055+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:9f8b8b88c310dc7256f23ae114eecb10&#39;,
-  &#39;version_id&#39;: &#39;6d0fb48e-5af2-4a83-a130-7bbfb81afc57&#39;,
+  &#39;version_id&#39;: &#39;fb16f68e-5b7a-4a53-912e-f4480ecb44d1&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Antiochos.json&#39;,
   &#39;size&#39;: 78439},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:31.132815+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Geminos.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Geminos.json?versionId=9120551b-d93f-415f-a116-90676f0cc84e&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Geminos.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:10.998593+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Geminos.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Geminos.json?versionId=5e82321a-aa1b-4ecb-b1a9-eaa7d1fc26ee&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Geminos.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:31.125574+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:10.993280+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:84278864159cdef63ed7f6e4dca997a5&#39;,
-  &#39;version_id&#39;: &#39;9120551b-d93f-415f-a116-90676f0cc84e&#39;,
+  &#39;version_id&#39;: &#39;5e82321a-aa1b-4ecb-b1a9-eaa7d1fc26ee&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Geminos.json&#39;,
   &#39;size&#39;: 303197},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:31.413782+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Hibeh.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Hibeh.json?versionId=2629e429-99d9-470d-841d-879228845908&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Hibeh.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:11.297076+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Hibeh.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Hibeh.json?versionId=0169900c-86ef-4d53-a9ec-77764f10ce39&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Hibeh.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:31.407519+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:11.291805+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:8e0d25ec5398bf288250ed6892ba6615&#39;,
-  &#39;version_id&#39;: &#39;2629e429-99d9-470d-841d-879228845908&#39;,
+  &#39;version_id&#39;: &#39;0169900c-86ef-4d53-a9ec-77764f10ce39&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Hibeh.json&#39;,
   &#39;size&#39;: 46200},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:31.695866+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Madrid.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Madrid.json?versionId=11972ddd-230d-4943-a687-27b6ff0a777c&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Madrid.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:11.642247+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Madrid.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Madrid.json?versionId=5524dfd6-1ad1-479a-99aa-4dc5a923bc3b&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Madrid.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:31.689574+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:11.634381+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:7c700e14d8d04d0041db949db451fb9b&#39;,
-  &#39;version_id&#39;: &#39;11972ddd-230d-4943-a687-27b6ff0a777c&#39;,
+  &#39;version_id&#39;: &#39;5524dfd6-1ad1-479a-99aa-4dc5a923bc3b&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Madrid.json&#39;,
   &#39;size&#39;: 83574},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:32.197854+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Milet.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Milet.json?versionId=a4b149cd-c36e-4d86-92b1-0f15a99ef6eb&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Milet.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:12.116721+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Milet.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Milet.json?versionId=82f9cc11-ebee-42bf-94a5-afa42d74f5c3&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Milet.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:32.192064+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:12.111106+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:b1ecb72148b8a5c3e878f3d074b8ad97&#39;,
-  &#39;version_id&#39;: &#39;a4b149cd-c36e-4d86-92b1-0f15a99ef6eb&#39;,
+  &#39;version_id&#39;: &#39;82f9cc11-ebee-42bf-94a5-afa42d74f5c3&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Milet.json&#39;,
   &#39;size&#39;: 28419},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:32.505985+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Oxford.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Oxford.json?versionId=4cdd7ed1-68c1-4d78-b3fe-106259db99ab&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Oxford.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:12.404082+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Oxford.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Oxford.json?versionId=669dd8e1-4a27-463a-9139-debd9e4119c7&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Oxford.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:32.498672+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:12.399069+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:e69ecabd1b3049fa858178cd0a4bfe67&#39;,
-  &#39;version_id&#39;: &#39;4cdd7ed1-68c1-4d78-b3fe-106259db99ab&#39;,
+  &#39;version_id&#39;: &#39;669dd8e1-4a27-463a-9139-debd9e4119c7&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Oxford.json&#39;,
   &#39;size&#39;: 33330},
  {&#39;mimetype&#39;: &#39;application/octet-stream&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:32.773611+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Parapegmata.cite&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Parapegmata.cite?versionId=4ae782dd-45ad-40ba-858b-72a30cd8e276&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Parapegmata.cite?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:12.656568+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Parapegmata.cite&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Parapegmata.cite?versionId=cbe6751a-22fd-4692-824f-885ebe4a0f0d&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Parapegmata.cite?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:32.767986+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:12.651910+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:ffe53c1cefcede6529615ca3ca6d7db9&#39;,
-  &#39;version_id&#39;: &#39;4ae782dd-45ad-40ba-858b-72a30cd8e276&#39;,
+  &#39;version_id&#39;: &#39;cbe6751a-22fd-4692-824f-885ebe4a0f0d&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Parapegmata.cite&#39;,
   &#39;size&#39;: 16270},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:33.025750+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Paris.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Paris.json?versionId=b982d907-a3b0-472c-bf9c-130965cc566d&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Paris.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:12.966468+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Paris.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Paris.json?versionId=c27c8048-fa80-4674-a774-67812622a67d&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Paris.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:33.020506+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:12.960431+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:6917abbae53d2669ea1e773cf272c0a4&#39;,
-  &#39;version_id&#39;: &#39;b982d907-a3b0-472c-bf9c-130965cc566d&#39;,
+  &#39;version_id&#39;: &#39;c27c8048-fa80-4674-a774-67812622a67d&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Paris.json&#39;,
   &#39;size&#39;: 127034},
  {&#39;mimetype&#39;: &#39;application/json&#39;,
-  &#39;updated&#39;: &#39;2020-10-14T14:47:33.387104+00:00&#39;,
-  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Phaseis.json&#39;,
-   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Phaseis.json?versionId=b6fc6f3b-a8ca-4235-9d7f-d6bc7fd7145e&#39;,
-   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/125bd150-85df-4c93-9ca5-d8ca03b926e7/Phaseis.json?uploads&#39;},
+  &#39;updated&#39;: &#39;2020-12-16T10:46:13.290260+00:00&#39;,
+  &#39;links&#39;: {&#39;self&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Phaseis.json&#39;,
+   &#39;version&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Phaseis.json?versionId=45727d9b-dfe8-4e2d-9220-f6571d45a4ad&#39;,
+   &#39;uploads&#39;: &#39;https://sandbox.zenodo.org/api/files/8530cff0-7b19-4a56-a862-c047e5b32eed/Phaseis.json?uploads&#39;},
   &#39;is_head&#39;: True,
-  &#39;created&#39;: &#39;2020-10-14T14:47:33.379073+00:00&#39;,
+  &#39;created&#39;: &#39;2020-12-16T10:46:13.284010+00:00&#39;,
   &#39;checksum&#39;: &#39;md5:33deed0fdb34e2ff81a5904430c7d1b1&#39;,
-  &#39;version_id&#39;: &#39;b6fc6f3b-a8ca-4235-9d7f-d6bc7fd7145e&#39;,
+  &#39;version_id&#39;: &#39;45727d9b-dfe8-4e2d-9220-f6571d45a4ad&#39;,
   &#39;delete_marker&#39;: False,
   &#39;key&#39;: &#39;Phaseis.json&#39;,
   &#39;size&#39;: 920426}]</pre>
