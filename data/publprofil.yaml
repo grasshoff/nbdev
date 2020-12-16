@@ -1,0 +1,20 @@
+ResearchObject:
+ Name: Paketname (für Zenodo)
+ Resources:
+  - Attributes:
+      Attr1: Beschreibung zu Attr1, z.B. DF-Spalten, JSON-keys,...
+      Attr2: weitere Attribute können folgen
+    File: Dateiname mit Endung, als Liste können beliebig viele Ressourcen (je File + Attributes) folgen
+  - Attributes:
+      Attr1: Attr1
+      Attr2: Attr2
+    File: file2.xy
+ Metadata:
+    Creator: Name1, Name2, ...
+    Description: Paketbeschreinbung
+    Geolocation/Region: Forschungsregion
+    Keywords: Zenodo-Keywords
+    Publication Year: Jahreszahl in Anführungszeichen als String
+    Title: Pakettitel (ausführlicherer Name)
+    Version: Zahl in Anführungszeichen als String
+    Rights: Lizenz, üblicherweise CC-BY-SA 3.0 DE
