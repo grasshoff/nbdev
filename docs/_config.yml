@@ -1,9 +1,9 @@
-repository: biersabrina/nbdev_template
+repository: grasshoff/nbdev
 output: web
-topnav_title: nbdev_template
-site_title: nbdev_template
+topnav_title: Check Metadata and Upload to Zenodo
+site_title: CheckCiteUploadZenodo
 company_name: Humboldt-Universität zu Berlin
-description: test
+description: This is a notebook to check if the credentials are given in a correct and complete way according to a given format. If this is the case this notebook will upload the data to Zenodo.
 encoding: UTF-8
 # Set to false to disable KaTeX math
 use_math: true
@@ -61,4 +61,4 @@ sidebars:
 - home_sidebar
 
 theme: jekyll-theme-cayman
-baseurl: /nbdev_template/
+baseurl: /nbdev/
